@@ -16,8 +16,10 @@ class UsersAdapter(private val onItemClickListener: (UsersEntity) -> Unit) :
 
     override fun getItemId(position: Int) = getItem(position).id
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        UsersViewHolder(parent, onItemClickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder =
+        UsersViewHolder(parent) {
+            onItemClickListener(data[it])
+        }
 
     override fun onBindViewHolder(holder: UsersViewHolder, position: Int) {
         holder.bind(getItem(position))

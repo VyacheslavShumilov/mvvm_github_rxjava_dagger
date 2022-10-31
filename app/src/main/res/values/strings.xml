@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GitHub MVVM RxJava Koin</string>
+    <string name="app_name">GitHub MVVM RxJava Dagger2</string>
     <string name="main_activity_refresh_btn">Обновить список</string>
     <string name="item_user_info_login">Login:</string>
     <string name="item_user_info_id">ID:</string>
