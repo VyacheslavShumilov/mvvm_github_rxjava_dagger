@@ -7,13 +7,12 @@ interface UsersContract {
 
     interface ViewModel {
 
-        val usersLiveData: Observable<List<UsersEntity>>
-        val errorLiveData: Observable<Throwable>
-        val progressLiveData: Observable<Boolean>
-        val openProfileLiveData: Observable<Unit> // для открытия новой активити
+        val usersObservable: Observable<List<UsersEntity>>
+        val errorObservable: Observable<Throwable>
+        val progressObservable: Observable<Boolean>
 
         fun onRefresh()     //управляющий метод
-        fun onUserClick(usersEntity: UsersEntity)
+
     }
 
 }

@@ -6,20 +6,24 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.rxjava.githubmvvmrxjavakoin.app
+import com.rxjava.githubmvvmrxjavakoin.data.retrofit.LIST_USERS_FROM_USER
 import com.rxjava.githubmvvmrxjavakoin.databinding.ActivityMainBinding
 import com.rxjava.githubmvvmrxjavakoin.domain.entities.UsersEntity
+import com.rxjava.githubmvvmrxjavakoin.domain.repos.UsersRepo
 import com.rxjava.githubmvvmrxjavakoin.ui.profile.ProfileActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private val adapter = UsersAdapter {
-        viewModel.onUserClick(it)
-    }
+    private lateinit var adapter: UsersAdapter
 
-    private val viewModel: UsersViewModel by viewModel()
+    @Inject
+    lateinit var usersRepo: UsersRepo
+
+    private val viewModel: UsersViewModel by lazy { UsersViewModel(usersRepo) }
 
     private val viewModelDisposable = CompositeDisposable()
 
@@ -28,13 +32,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        app.appComponent.inject(this) // вызывается один раз, чтобы проставились значения
+
+
         initViews()
 
         viewModelDisposable.addAll(
-            viewModel.progressLiveData.subscribe{ showProgress(it) },
-            viewModel.usersLiveData.subscribe{ showUsers(it) },
-            viewModel.errorLiveData.subscribe{ showError(it) },
-            viewModel.openProfileLiveData.subscribe{ openProfileScreen() }
+            viewModel.progressObservable.subscribe{ showProgress(it) },
+            viewModel.usersObservable.subscribe{ showUsers(it) },
+            viewModel.errorObservable.subscribe{ showError(it) }
         )
     }
 
@@ -53,8 +59,13 @@ class MainActivity : AppCompatActivity() {
         showProgress(false)
     }
 
-    private fun openProfileScreen() {
-        startActivity(Intent(this, ProfileActivity::class.java))
+    private fun openProfileScreen(user: UsersEntity) {
+        val args = Bundle()
+        args.putParcelable(LIST_USERS_FROM_USER, user)
+
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("profile", args)
+        startActivity(intent)
     }
 
 
@@ -72,6 +83,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
+        adapter = UsersAdapter {
+            openProfileScreen(it)
+        }
         binding.usersRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.usersRecyclerView.adapter = adapter
     }

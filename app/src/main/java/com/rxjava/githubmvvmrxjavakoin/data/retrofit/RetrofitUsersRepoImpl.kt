@@ -8,22 +8,15 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 class RetrofitUsersRepoImpl(private val api: GithubApi) : UsersRepo {
 
 
-    override fun getUsers(onSuccess: (List<UsersEntity>) -> Unit, onError: ((Throwable) -> Unit)?) {
-
+    override fun getUsers(
+        onSuccess: (List<UsersEntity>) -> Unit,
+        onError: ((Throwable) -> Unit)?
+    ) {
         api.getUsers().subscribeBy(
-            onSuccess = { users ->
-                onSuccess.invoke(users.map { it.toUsersEntity() })
-            },
-            onError = {
-                onError?.invoke(it)
-            }
+            onSuccess = { onSuccess.invoke(it)
+        }, onError = { onError?.invoke(it)}
         )
     }
 
     override fun getUsers(): Single<List<UsersEntity>> = api.getUsers()
-        .map { users ->
-            users.map {
-                it.toUsersEntity()
-            }
-        }
 }

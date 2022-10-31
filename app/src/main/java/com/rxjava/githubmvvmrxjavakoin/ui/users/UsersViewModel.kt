@@ -13,31 +13,27 @@ class UsersViewModel(
     private val usersRepo: UsersRepo
 ) : UsersContract.ViewModel, ViewModel() {
 
-    override val usersLiveData: Observable<List<UsersEntity>> = BehaviorSubject.create()
-    override val errorLiveData: Observable<Throwable> = BehaviorSubject.create()
-    override val progressLiveData: Observable<Boolean> = BehaviorSubject.create()
-    override val openProfileLiveData: Observable<Unit> = BehaviorSubject.create()
+    override val usersObservable: Observable<List<UsersEntity>> = BehaviorSubject.create()
+    override val errorObservable: Observable<Throwable> = BehaviorSubject.create()
+    override val progressObservable: Observable<Boolean> = BehaviorSubject.create()
+
 
     override fun onRefresh() {
         loadData()
     }
 
-    override fun onUserClick(usersEntity: UsersEntity) {
-        openProfileLiveData
-    }
-
     private fun loadData() {
-        progressLiveData.mutable().onNext(true)
+        progressObservable.mutable().onNext(true)
         usersRepo.getUsers()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {
-                    progressLiveData.mutable().onNext(false)
-                    usersLiveData.mutable().onNext(it)
+                    progressObservable.mutable().onNext(false)
+                    usersObservable.mutable().onNext(it)
                 },
                 onError = {
-                    progressLiveData.mutable().onNext(false)
-                    errorLiveData.mutable().onNext(it)
+                    progressObservable.mutable().onNext(false)
+                    errorObservable.mutable().onNext(it)
                 }
             )
     }
