@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="imageView_avatar_width">72dp</dimen>
+    <dimen name="imageView_avatar_height">72dp</dimen>
+    <dimen name="item_layout_padding">8dp</dimen>
+    <dimen name="item_inner_layout_padding">4dp</dimen>
+    <dimen name="item_txt_size">28sp</dimen>
+    <dimen name="activity_main_layout_padding">16dp</dimen>
+    <dimen name="activity_main_btn_radius">10dp</dimen>
+</resources>
