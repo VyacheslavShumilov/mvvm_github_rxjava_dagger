@@ -2,11 +2,13 @@ package com.rxjava.githubmvvmrxjavakoin.ui.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import coil.load
-import com.rxjava.githubmvvmrxjavakoin.data.retrofit.LIST_USERS_FROM_USER
 import com.rxjava.githubmvvmrxjavakoin.databinding.ActivityProfileBinding
 import com.rxjava.githubmvvmrxjavakoin.domain.entities.UsersEntity
 class ProfileActivity : AppCompatActivity() {
+
+    private val PROFILE_KEY = "profile"
 
     private lateinit var binding: ActivityProfileBinding
 
@@ -15,15 +17,20 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        intent.getParcelableExtra<UsersEntity>(LIST_USERS_FROM_USER)?.let {
-            initViews(it)
+
+        val selectedProfile = intent.getParcelableExtra<UsersEntity>(PROFILE_KEY)
+        if (selectedProfile !=null) {
+            initViews(selectedProfile)
+        } else {
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
         }
+
     }
 
     private fun initViews(it: UsersEntity) {
         with(binding) {
             avatarUserImage.load(it.avatarUrl)
-            loginUserTxtView.text = it.login
+            textView2.text = it.login
             userIdTxtView.text = it.id.toString()
         }
     }

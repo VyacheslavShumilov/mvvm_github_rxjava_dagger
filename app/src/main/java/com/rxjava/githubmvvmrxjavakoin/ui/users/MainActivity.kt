@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rxjava.githubmvvmrxjavakoin.app
-import com.rxjava.githubmvvmrxjavakoin.data.retrofit.LIST_USERS_FROM_USER
 import com.rxjava.githubmvvmrxjavakoin.databinding.ActivityMainBinding
 import com.rxjava.githubmvvmrxjavakoin.domain.entities.UsersEntity
 import com.rxjava.githubmvvmrxjavakoin.domain.repos.UsersRepo
@@ -60,11 +59,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openProfileScreen(user: UsersEntity) {
-        val args = Bundle()
-        args.putParcelable(LIST_USERS_FROM_USER, user)
+        val bundle = Bundle()
+        bundle.putParcelable("profile", user)
 
         val intent = Intent(this, ProfileActivity::class.java)
-        intent.putExtra("profile", args)
+        intent.putExtras(bundle)
         startActivity(intent)
     }
 
